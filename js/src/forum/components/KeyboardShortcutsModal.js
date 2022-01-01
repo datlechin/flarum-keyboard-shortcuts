@@ -17,8 +17,8 @@ export default class KeyboardShortcutsModal extends Modal {
   }
 
   content() {
-    const groupName = (key) => app.translator.trans(packagePrefix + 'forum.modal.' + key);
-    const shortcutName = (key) => app.translator.trans(packagePrefix + 'forum.modal.shortcuts.' + key);
+    const groupName = (key) => app.translator.trans(packagePrefix + 'lib.' + key);
+    const shortcutName = (key) => app.translator.trans(packagePrefix + 'lib.shortcuts.' + key);
     return (
       <div className="Modal-body">
         <div className="KeyboardShortcuts-wrap">
