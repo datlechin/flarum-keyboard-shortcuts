@@ -1,5 +1,12 @@
-.idea
-js/node_modules
-js/dist
+/vendor
 composer.lock
-vendor
+composer.phar
+
+.DS_Store
+Thumbs.db
+tests/.phpunit.result.cache
+/tests/integration/tmp
+.vagrant
+.idea/*
+.vscode
+js/coverage-ts
