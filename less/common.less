@@ -1,0 +1,195 @@
+// -----------------------------------------------------------------------------
+// Keyboard shortcuts — shared building blocks
+//
+// Everything here is built from core's design tokens and sized on core's own
+// rhythm (13px controls, 12px help text, 36px form fields, `--border-radius`),
+// so the extension follows the forum's palette, its light and dark schemes and
+// its high-contrast modes without declaring a colour of its own.
+// -----------------------------------------------------------------------------
+
+:root {
+  // A key cap reads as a physical key: a raised surface with a hard bottom
+  // edge. `--code-bg` and `--code-color` already exist for exactly this kind of
+  // typed-literal content, and both are defined per scheme.
+  --keycap-bg: var(--body-bg);
+  --keycap-color: var(--text-color);
+  --keycap-border: var(--control-bg-shaded);
+}
+
+// On a shaded surface — a modal body, a settings card — the cap has to lift off
+// its background rather than blend into it.
+.Modal-body,
+.FormSection {
+  --keycap-bg: var(--body-bg);
+}
+
+// -----------------------------------------------------------------------------
+// KeyCombo
+// -----------------------------------------------------------------------------
+
+.KeyCombo {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  line-height: 20px;
+
+  &--empty {
+    color: var(--muted-more-color);
+    font-style: italic;
+    font-size: 12px;
+  }
+}
+
+.KeyCombo-alternative,
+.KeyCombo-chord {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.KeyCombo-separator {
+  color: var(--muted-color);
+  font-size: 11px;
+  font-style: italic;
+  padding: 0 1px;
+}
+
+.KeyCombo-key {
+  display: inline-block;
+  min-width: 22px;
+  padding: 2px 6px;
+
+  background-color: var(--keycap-bg);
+  border: 1px solid var(--keycap-border);
+  border-bottom-width: 2px;
+  border-radius: var(--border-radius);
+
+  color: var(--keycap-color);
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+// -----------------------------------------------------------------------------
+// ShortcutRecorder
+//
+// The capture control is a button that behaves like a form field: it takes
+// focus, shows the current value, and enters an editing state when activated.
+// It therefore wears `FormControl`, and its recording state borrows the very
+// same treatment `FormControl` gives focus — so "this field is taking your
+// input" reads identically here and everywhere else in Flarum.
+// -----------------------------------------------------------------------------
+
+.ShortcutRecorder {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ShortcutRecorder-capture {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: auto;
+  min-height: 36px;
+  cursor: pointer;
+  text-align: start;
+
+  &:hover:not(:disabled) {
+    background-color: var(--control-bg-shaded);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+
+  // Core owns the focus-ring style; hand-rolling one here would diverge from
+  // the rest of the forum the moment a theme changes it.
+  .add-keyboard-focus-ring();
+}
+
+.ShortcutRecorder--recording .ShortcutRecorder-capture {
+  // `.FormControl:focus`, applied while listening.
+  background-color: var(--body-bg);
+  color: var(--text-color);
+  border-color: var(--primary-color);
+}
+
+.ShortcutRecorder-prompt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-color);
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.ShortcutRecorder-promptIcon {
+  font-size: 7px;
+  color: var(--primary-color);
+  animation: KeyboardShortcuts-listening 1.4s ease-in-out infinite;
+}
+
+@keyframes KeyboardShortcuts-listening {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+// The pulse is decoration: "Press keys…" and the live region already say what
+// is happening.
+@media (prefers-reduced-motion: reduce) {
+  .ShortcutRecorder-promptIcon {
+    animation: none;
+  }
+}
+
+.ShortcutRecorder-controls {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+// Quiet until wanted: these sit beside every binding, and at full strength a
+// long list becomes a wall of icons.
+.ShortcutRecorder-control {
+  --button-color: var(--muted-more-color);
+
+  padding: 8px;
+
+  &:hover,
+  &:focus-visible {
+    --button-color: var(--link-color);
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Conflict notice
+//
+// Shared by the admin table and the customisation form: two shortcuts in one
+// group claiming the same keys is worth flagging, but not worth blocking.
+// -----------------------------------------------------------------------------
+
+.KeyboardShortcuts-conflict {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+
+  color: var(--control-warning-color);
+  font-size: 12px;
+  line-height: 1.5em;
+  font-weight: normal;
+
+  .icon {
+    font-size: 11px;
+  }
+}
