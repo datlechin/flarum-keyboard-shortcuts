@@ -1,40 +1,270 @@
-.KeyboardShortcuts-wrap {
-  transition: width 0.2s linear;
+@import 'common.less';
+
+// -----------------------------------------------------------------------------
+// The cheat sheet
+//
+// Built on the same pieces the search modal uses — a flat modal whose body is a
+// stack of sections, each introduced by a `Modal-divider` and a
+// `Dropdown-header`, with rows on `Dropdown-menu`'s spacing. The one departure
+// is the column layout: a reference is read by scanning, and a single 800px
+// column of thirty rows wastes the width it was given.
+// -----------------------------------------------------------------------------
+
+.KeyboardShortcutsModal-body {
   display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+}
+
+.KeyboardShortcutsModal-search {
+  padding: 0 2px 6px;
+}
+
+// Columns rather than a grid: the groups are wildly different lengths, and a
+// grid aligns them into rows, so a five-row group sitting beside an eight-row
+// one leaves the difference as dead space. Columns pack by height instead, and
+// `break-inside` keeps each group whole.
+.KeyboardShortcuts-groups {
+  @media @tablet-up {
+    column-count: 2;
+    column-gap: 32px;
+  }
+}
+
+.KeyboardShortcuts-group {
+  min-width: 0;
+  break-inside: avoid;
+
+  // Multicol needs the box to be unsplittable in its own right, not merely
+  // asked not to break.
+  display: flow-root;
+
+  // `Modal-divider` is drawn full-bleed in a single-column body; in a column
+  // it has to stop at its own edges.
+  .Modal-divider {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+// The same voice `Dropdown-header` uses for a section label inside a menu,
+// applied to a real heading. Borrowing the class itself would drag in padding,
+// `white-space: nowrap` and a top border that duplicates the divider above.
+.KeyboardShortcuts-groupTitle {
+  margin: 0;
+  padding: 10px 0 4px;
+
+  color: var(--heading-color);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 20px;
+}
+
+.KeyboardShortcuts-list {
+  margin: 0;
+}
+
+.KeyboardShortcuts-item {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+  gap: 16px;
+  padding: 6px 0;
+  min-width: 0;
+
+  & + .KeyboardShortcuts-item {
+    border-top: 1px solid var(--control-bg);
+  }
+}
+
+.KeyboardShortcuts-itemLabel {
+  min-width: 0;
+  color: var(--text-color);
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 20px;
+}
+
+.KeyboardShortcuts-itemKeys {
+  display: flex;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.KeyboardShortcutsModal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   flex-wrap: wrap;
 
-  .KeyboardShortcuts-list {
-    list-style: none;
+  padding: 14px 16px;
+  border-top: 1px solid var(--control-bg);
+  text-align: start;
+}
+
+// -----------------------------------------------------------------------------
+// The customisation form
+//
+// A form, not a reference: one group at a time behind `Tabs`, so the list stays
+// short and the footer never scrolls away.
+// -----------------------------------------------------------------------------
+
+.CustomizeShortcutsModal-body {
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+}
+
+.CustomizeShortcutsModal-help {
+  padding: 0 2px 4px;
+}
+
+// `Tabs-nav` is padded for a full-bleed modal body; the flat body already has
+// its own padding.
+.CustomizeShortcutsModal .Tabs-nav {
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.CustomizeShortcutsModal-tabWarning {
+  color: var(--control-warning-color);
+  font-size: 11px;
+}
+
+.CustomizeShortcutsModal-tabContent {
+  padding-top: 8px;
+}
+
+.KeyboardShortcuts-editItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+
+  & + .KeyboardShortcuts-editItem {
+    border-top: 1px solid var(--control-bg);
+  }
+
+  @media @phone {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+.KeyboardShortcuts-editLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+
+  > label {
+    color: var(--text-color);
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 20px;
     margin: 0;
-    padding: 0 0 10px 0;
+  }
+}
 
-    .KeyboardShortcuts-heading {
-      font-size: 15px;
-      font-weight: bold;
+.KeyboardShortcuts-editItem .ShortcutRecorder {
+  flex: 0 0 210px;
+
+  @media @phone {
+    flex: 1 1 auto;
+  }
+}
+
+.CustomizeShortcutsModal-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  padding: 14px 16px;
+  border-top: 1px solid var(--control-bg);
+  text-align: start;
+}
+
+.CustomizeShortcutsModal-dirty {
+  margin-left: auto;
+}
+
+// -----------------------------------------------------------------------------
+// The keyboard cursor
+//
+// `j`/`k` move a cursor through the discussion list and the post stream. The
+// marker has to read as "you are here" without being mistaken for a selection
+// or a hover, so it is an accent rule plus the list's own hover surface — the
+// same surface the mouse produces, since it means the same thing.
+// -----------------------------------------------------------------------------
+
+.KeyboardShortcuts--active {
+  position: relative;
+  border-radius: var(--border-radius);
+  background-color: var(--discussion-list-item-bg-hover);
+
+  &:before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    inset-inline-start: 0;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--primary-color);
+  }
+
+  // The cursor moves focus onto the item so screen readers follow it. Core's
+  // focus ring on top of the marker would be saying the same thing twice.
+  &:focus-visible,
+  & > :focus-visible {
+    outline: none;
+  }
+}
+
+// A post is wider than its content column and has no hover surface of its own,
+// so the rule alone marks it — tinting the whole post would read as selection.
+.PostStream-item.KeyboardShortcuts--active {
+  background-color: transparent;
+
+  &:before {
+    inset-inline-start: -8px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .KeyboardShortcuts--active {
+    transition: background-color 0.15s ease-out;
+  }
+}
+
+// -----------------------------------------------------------------------------
+// Settings page section
+// -----------------------------------------------------------------------------
+
+.Settings-keyboardShortcuts {
+  &-hint {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+
+    .KeyCombo {
+      // The cap sits in running text here, so it should not out-shout it.
+      --keycap-bg: var(--body-bg);
+      font-size: 12px;
     }
+  }
 
-    .KeyboardShortcuts-unit {
-      line-height: 1.8;
-      margin-right: 2em;
-      padding: 5px 0;
-
-      .helpKey {
-        display: inline-block;
-        padding: 3px 5px;
-        font-size: 12px;
-        line-height: 13px;
-        color: #444d56;
-        vertical-align: middle;
-        background-color: #fafbfc;
-        border: solid 1px #c6cbd1;
-        border-bottom-color: #959da5;
-        border-radius: 3px;
-        box-shadow: inset 0 -1px 0 #959da5;
-      }
-      .helpKey-desc {
-        margin-left: 1em;
-      }
-    }
+  &-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 }

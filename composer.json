@@ -1,16 +1,18 @@
 {
     "name": "datlechin/flarum-keyboard-shortcuts",
-    "description": "Add keyboard shortcuts to your forum.",
+    "description": "Navigate your forum without touching the mouse.",
     "keywords": [
         "flarum",
         "flarum-extension",
         "keyboard shortcuts",
-        "shortcuts"
+        "shortcuts",
+        "accessibility",
+        "hotkeys"
     ],
     "type": "flarum-extension",
     "license": "MIT",
     "require": {
-        "flarum/core": "^1.0.0"
+        "flarum/core": "^2.0"
     },
     "authors": [
         {
@@ -20,16 +22,45 @@
         }
     ],
     "support": {
-        "source": "https://github.com/datlechin/flarum-scroll-buttons",
+        "issues": "https://github.com/datlechin/flarum-keyboard-shortcuts/issues",
+        "source": "https://github.com/datlechin/flarum-keyboard-shortcuts",
         "forum": "https://discuss.flarum.org/d/29773"
     },
-    "homepage": "https://ngoquocdat.com",
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/datlechin"
+        },
+        {
+            "type": "custom",
+            "url": "https://buymeacoffee.com/ngoquocdat"
+        }
+    ],
+    "homepage": "https://nqd.vn",
     "autoload": {
         "psr-4": {
             "Datlechin\\KeyboardShortcuts\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Datlechin\\KeyboardShortcuts\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "@test:unit",
+        "test:unit": "phpunit -c tests/phpunit.unit.xml",
+        "test:setup": "echo 'This extension has only unit tests, so there is no test database to set up.'"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:unit": "Runs all unit tests.",
+        "test:setup": "Does nothing: there are no integration tests to prepare a database for."
+    },
     "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        },
         "flarum-extension": {
             "title": "Keyboard Shortcuts",
             "category": "feature",
@@ -44,17 +75,25 @@
                 "admin": true,
                 "forum": true,
                 "js": true,
-                "jsCommon": false,
+                "jsCommon": true,
                 "css": true,
+                "locale": true,
                 "gitConf": true,
                 "githubActions": true,
                 "prettier": true,
-                "typescript": false,
+                "typescript": true,
                 "bundlewatch": false,
-                "backendTesting": false,
+                "frontendTesting": true,
+                "backendTesting": true,
+                "phpstan": false,
                 "editorConfig": true,
                 "styleci": true
             }
         }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "flarum/testing": "^2.0"
     }
 }

@@ -1,25 +1,159 @@
-.KeyboardShortcuts-settings {
+@import 'common.less';
+
+// -----------------------------------------------------------------------------
+// The extension's admin page
+//
+// Two distinct kinds of content, laid out as the design system intends each to
+// be: the three settings that govern shortcuts as a whole go in a `FormSection`
+// card, and the thirty bindings — tabular data — go in a table built on core's
+// own `.Table()` mixin, the way `NotificationGrid` and the permission grid do.
+// -----------------------------------------------------------------------------
+
+.KeyboardShortcutsPage-bindingsHeader {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 100%;
 
-  .KeyboardShortcuts-first {
-    display: flex;
-    flex-direction: column;
-    margin-right: 15px;
-  }
-
-  .KeyboardShortcuts-second {
-    display: flex;
-    flex-direction: column;
-    margin-right: 15px;
-  }
-
-  .KeyboardShortcuts-third {
-    display: flex;
-    flex-direction: column;
-    margin-right: 15px;
+  > label {
+    margin: 0;
   }
 }
-.button {
-  margin-top: 30px;
+
+.KeyboardShortcutsPage-filter {
+  flex: 0 1 260px;
+
+  // `ExtensionPage-settings` caps every input at 400px for the narrow settings
+  // cards; the filter sits in the full-width column and sets its own width.
+  .FormControl {
+    max-width: none;
+  }
+}
+
+.KeyboardShortcutsTable {
+  .Table();
+
+  width: 100%;
+  margin-top: 4px;
+  table-layout: fixed;
+
+  // `.Table()` centres its header cells, which suits a grid of checkbox
+  // columns. These are two labelled columns of prose, so they read from the
+  // start edge — and so must the row headers, which would otherwise keep the
+  // browser's centred default for `th` and leave every label adrift in the
+  // middle of the column.
+  th {
+    text-align: start;
+  }
+
+  // Repeated rather than left to the rule above: `.Table()` sets
+  // `thead th { text-align: center }`, which outranks a bare `th` selector.
+  thead th {
+    padding: 12px 15px;
+    text-align: start;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: var(--muted-color);
+  }
+
+  // A binding is a control of known size, so its column is sized to it and the
+  // description takes everything left over. Sizing the description column
+  // instead (as a percentage) leaves a field floating in a half-empty column on
+  // a wide screen.
+  thead th:last-child {
+    width: 320px;
+  }
+
+  @media @phone {
+    table-layout: auto;
+
+    thead th:last-child {
+      width: auto;
+    }
+  }
+}
+
+// The group heading spans the table, in the same voice as `Dropdown-header`
+// and the cheat sheet's section titles. The space above it is what separates
+// one group from the last group's final row, so it is generous.
+.KeyboardShortcutsTable-groupRow > th {
+  padding-top: 26px;
+  padding-bottom: 6px;
+  border-bottom-color: var(--control-bg-shaded);
+
+  color: var(--heading-color);
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.KeyboardShortcutsTable-group:first-of-type .KeyboardShortcutsTable-groupRow > th {
+  padding-top: 14px;
+}
+
+.KeyboardShortcutsTable-row {
+  &:hover {
+    background: var(--control-bg-light);
+  }
+}
+
+.KeyboardShortcutsTable-label {
+  font-weight: normal;
+  vertical-align: middle;
+
+  > label {
+    display: block;
+    margin: 0;
+    color: var(--control-color);
+    font-size: 13px;
+    font-weight: normal;
+    cursor: pointer;
+  }
+
+  .KeyboardShortcuts-conflict {
+    margin-top: 4px;
+  }
+}
+
+.KeyboardShortcutsTable-binding {
+  vertical-align: middle;
+
+  // The field reads as an input, so it takes the input surface rather than the
+  // table's shaded one.
+  .ShortcutRecorder-capture {
+    background-color: var(--body-bg);
+  }
+}
+
+// On a phone the two columns become one stacked pair per row.
+@media @phone {
+  .KeyboardShortcutsTable {
+    thead {
+      .visually-hidden();
+    }
+
+    .KeyboardShortcutsTable-row {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 10px 15px;
+    }
+
+    .KeyboardShortcutsTable-label,
+    .KeyboardShortcutsTable-binding {
+      display: block;
+      padding: 0;
+      border-bottom: 0;
+    }
+
+    // A group heading is a row of its own, so it keeps the cell padding the
+    // stacked rows give up.
+    .KeyboardShortcutsTable-groupRow > th {
+      display: block;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+  }
 }
